@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
     }
 
     const response = NextResponse.redirect(new URL("/", request.url));
+
     response.cookies.set("access_token", data.access_token);
+    
     return response;
 }
