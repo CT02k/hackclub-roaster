@@ -24,7 +24,5 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL("/", request.url));
     }
 
-    request.cookies.set("access_token", data.access_token)
-
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", request.url)).cookies.set("access_token", data.access_token);
 }
