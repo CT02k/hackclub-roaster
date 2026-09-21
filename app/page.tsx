@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
-  const redirectUrl = `https://hackatime.hackclub.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_HACKATIME_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_HACKATIME_REDIRECT_URI ?? "")}&response_type=code&scope=${encodeURIComponent(process.env.NEXT_PUBLIC_HACKATIME_SCOPE ?? "profile read")}`;
+  const redirectUrl = `https://hackatime.hackclub.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_HACKATIME_CLIENT_ID}&redirect_uri=${encodeURIComponent(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback`)}&response_type=code&scope=${encodeURIComponent("profile read")}`;
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-100 text-black">
       <Link href="https://hackclub.com?ref=hc-roaster">
