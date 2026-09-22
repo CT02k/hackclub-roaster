@@ -20,6 +20,7 @@ export default function Home() {
         <Image src="/flag-orpheus-top.png" className="absolute top-0 left-10" alt="Orpheus Flag" width={150} height={150} />
       </Link>
       <Image src="/title.png" alt="Hackclub Roaster" width={400} height={400} className="mt-4" />
+      <p className="text-center text-lg font-mono mt-4">Roast yourself with your hackclub data with the power of AI</p>
       {
         loggedIn ? (
           <div className="flex flex-col items-center justify-center">
