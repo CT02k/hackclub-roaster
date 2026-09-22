@@ -80,17 +80,13 @@ export async function GET(request: NextRequest) {
         }
     })
 
-    const chatCompletion = response as typeof response & {
-        choices?: Array<{ message?: { content?: string | null } }>;
-    };
-
-    if (!chatCompletion.choices?.[0]?.message) {
+    if (!("choices" in response) || !response.choices[0]?.message) {
         return Response.json({
             response: "Failed to generate roast"
         }, { status: 500 });
     }
 
-    const roast = chatCompletion.choices[0].message.content
+    const roast = response.choices[0].message.content
 
     return Response.json({
         response: roast
