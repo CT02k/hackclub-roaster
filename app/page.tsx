@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import Button from "./components/button";
 
 export default function Home() {
   const [loggedIn] = useState(() => {
@@ -39,7 +40,7 @@ export default function Home() {
                 <Image src="/paper.png" alt="Paper" width={50} height={50} className="absolute w-full h-full" />
               </div>) : null
             }
-            <button className="bg-[#ec3750] text-white rounded-full group relative contain-content flex items-center px-6 py-2.5 mt-4 hover:saturate-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer border-b-4 border-r-4 border-rose-950"
+            <Button
              onClick={() => {
               setLoading(true);
               fetch("/api/roast")
@@ -54,17 +55,13 @@ export default function Home() {
                 });
              }} disabled={loading}>
               Roast
-            <span className="absolute text-2xl translate-x-35 group-hover:-translate-x-15 group-hover:rotate-180 transition duration-1000">🙏</span>
-            <span className="absolute text-2xl translate-x-35 group-hover:-translate-x-15 group-hover:rotate-180 transition duration-1250">🤠</span>
-            <span className="absolute text-2xl translate-x-35 group-hover:-translate-x-15 group-hover:rotate-180 transition duration-1500">🕷️</span>
-          </button>
+            </Button>
           </div>
         ) : (
-          <Link href={redirectUrl} className="bg-[#ec3750] text-white rounded-full group relative contain-content flex items-center px-6 py-2.5 mt-4 hover:saturate-90 transition-all cursor-pointer border-b-4 border-r-4 border-rose-950">
-            Link Hackatime
-            <span className="absolute text-2xl translate-x-35 group-hover:-translate-x-15 group-hover:rotate-180 transition duration-1000">🙏</span>
-            <span className="absolute text-2xl translate-x-35 group-hover:-translate-x-15 group-hover:rotate-180 transition duration-1250">🤠</span>
-            <span className="absolute text-2xl translate-x-35 group-hover:-translate-x-15 group-hover:rotate-180 transition duration-1500">🕷️</span>
+          <Link href={redirectUrl}>
+            <Button>
+              Link Hackatime
+            </Button>
           </Link>
         )
       }
