@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
     const response = await or.chat.send({
         chatRequest: {
-            model: "openrouter/auto",
+            model: "deepseek/deepseek-v4-flash",
             messages: [
                 {
                     role: "system",
