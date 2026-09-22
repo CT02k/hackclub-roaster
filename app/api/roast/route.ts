@@ -5,8 +5,7 @@ export async function GET(request: NextRequest) {
     const access_token = request.cookies.get("access_token")?.value;
     
     const or = new OpenRouter({
-        apiKey: process.env.HACKCLUB_AI_API_KEY,
-        serverURL: "https://ai.hackclub.com/proxy/v1",
+        apiKey: process.env.OPENROUTER_API_KEY,
     });
 
     if (!access_token) {
@@ -20,6 +19,8 @@ export async function GET(request: NextRequest) {
     });
 
     const aboutUser = await aboutUserReq.json();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { trust_factor, ...userWithoutTrustFactor } = aboutUser;
 
     const codingTimeReq = await fetch("https://hackatime.hackclub.com/api/v1/authenticated/hours?start_date=2000-01-01&end_date=" + new Date().toISOString().split('T')[0], {
         headers: {
@@ -44,7 +45,23 @@ export async function GET(request: NextRequest) {
         },
     });
 
+    const projectReq = await fetch("https://hackatime.hackclub.com/api/v1/authenticated/projects", {
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+    });
+
+    const projects = await projectReq.json();
+
     const latestHeartbeat = await latestHeartbeatReq.json();
+
+    const githubUserReq = await fetch("https://api.github.com/users/" + userWithoutTrustFactor.github_username)
+
+    const githubUser = await githubUserReq.json();
+
+    const githubReposReq = await fetch("https://api.github.com/users/" + userWithoutTrustFactor.github_username + "/repos")
+
+    const githubRepos = await githubReposReq.json();
 
     const response = await or.chat.send({
         chatRequest: {
@@ -52,11 +69,11 @@ export async function GET(request: NextRequest) {
             messages: [
                 {
                     role: "system",
-                    content: "You generates a roast for a user based on their hackclub/hackatime information. The roast should be humorous. Use the user's name and any other relevant information from their profile to make the roast personalized."
+                    content: "You generates a roast limited at 2000 characters for a user based on their hackclub/hackatime and github information. Don't use markdown. The roast should be humorous. Use the user's name and any other relevant information from their profile to make the roast personalized."
                 },
                 {
                     role: "user",
-                    content: `User information: ${JSON.stringify(aboutUser)}. Coding time information (the start date is only used to retrieve all data; the user was probably not even born on this date): ${JSON.stringify(codingTime)}. Streak information: ${JSON.stringify(streak)}. Latest heartbeat information: ${JSON.stringify(latestHeartbeat)}.`
+                    content: `#Hackatime Data\nUser information: ${JSON.stringify(userWithoutTrustFactor)}. Coding time information: ${codingTime.total_seconds} seconds. Actual streak: ${JSON.stringify(streak)}. Latest heartbeat information: ${JSON.stringify(latestHeartbeat)}. Projects: ${JSON.stringify(projects)}.\n\n#Github Data\nUser information: ${JSON.stringify(githubUser)}. Repositories: ${JSON.stringify(githubRepos)}.`
                 }
             ],
             stream: false,
