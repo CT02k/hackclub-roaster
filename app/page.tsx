@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [loggedIn] = useState(() => {
+    if (typeof document === "undefined") return false;
     const access_token = document.cookie.split("; ").find(row => row.startsWith("access_token="))?.split("=")[1];
     return access_token !== undefined;
   });
