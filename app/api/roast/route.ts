@@ -80,8 +80,16 @@ export async function GET(request: NextRequest) {
         }
     })
 
+    if (!("choices" in response) || !response.choices[0]?.message) {
+        return Response.json({
+            response: "Failed to generate roast"
+        }, { status: 500 });
+    }
+
+    const roast = response.choices[0].message.content
+
     return Response.json({
-        response: response.choices[0].message.content
+        response: roast
     });
 
 }
