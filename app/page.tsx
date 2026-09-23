@@ -4,8 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "./components/button";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   const [loggedIn] = useState(() => {
     if (typeof document === "undefined") return false;
     const access_token = document.cookie.split("; ").find(row => row.startsWith("access_token="))?.split("=")[1];
@@ -58,11 +61,9 @@ export default function Home() {
             </Button>
           </div>
         ) : (
-          <Link href={redirectUrl}>
-            <Button>
-              Link Hackatime
-            </Button>
-          </Link>
+          <Button onClick={() => router.push(redirectUrl)}>
+            Link Hackatime
+          </Button>
         )
       }
       <Image src="/idkanymore.png" alt="idk anymore" width={100} height={100} className="fixed bottom-0 right-0" />
