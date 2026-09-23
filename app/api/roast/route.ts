@@ -1,7 +1,7 @@
 import { OpenRouter } from "@openrouter/sdk";
 import { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
     const access_token = request.cookies.get("access_token")?.value;
     
     const or = new OpenRouter({
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!access_token) {
-        return new Response("Unauthorized", { status: 401 });
+        return Response.json({"response": "Unauthorized"}, { status: 401 });
     }
 
     const aboutUserReq = await fetch("https://hackatime.hackclub.com/api/v1/authenticated/me", {

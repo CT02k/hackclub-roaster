@@ -46,7 +46,7 @@ export default function Home() {
             <Button
              onClick={() => {
               setLoading(true);
-              fetch("/api/roast")
+              fetch("/api/roast", { method: "POST" })
                 .then(res => res.json())
                 .then(data => {
                   setRoast(data.response);
