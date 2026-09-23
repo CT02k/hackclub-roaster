@@ -44,7 +44,7 @@ export default function Home() {
             ) : null}
             {
               roast && !loading ? (
-              <div className="relative my-8 w-250 min-h-48 h-fit flex items-center justify-center p-16">
+              <div className="relative my-8 w-full md:w-200 lg:w-250 min-h-48 h-fit flex items-center justify-center p-16">
                 <div className="z-1">
                   <Image src="/draw.png" alt="Draw" width={50} height={50} className="absolute top-0 left-5" />
                   <Image src="/draw1.png" alt="Draw" width={50} height={50} className="absolute bottom-0 right-5" />
