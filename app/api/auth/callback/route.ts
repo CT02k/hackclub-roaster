@@ -26,7 +26,12 @@ export async function GET(request: NextRequest) {
 
     const response = NextResponse.redirect(new URL("/", request.url));
 
-    response.cookies.set("access_token", data.access_token);
+    response.cookies.set("access_token", data.access_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 30,
+    });
     
     return response;
 }

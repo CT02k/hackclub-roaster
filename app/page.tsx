@@ -2,18 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "./components/button";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
 
-  const [loggedIn] = useState(() => {
-    if (typeof document === "undefined") return false;
-    const access_token = document.cookie.split("; ").find(row => row.startsWith("access_token="))?.split("=")[1];
-    return access_token !== undefined;
-  });
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const userReq = await fetch("/api/auth/me", { method: "GET" });
+
+      if (!userReq.ok) return false;
+    
+      return true;
+    }
+
+    checkAuth().then((isLoggedIn) => {
+      setLoggedIn(isLoggedIn);
+    });
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [roast, setRoast] = useState("");
