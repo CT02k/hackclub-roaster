@@ -1,3 +1,4 @@
+import { Hackatime, HackatimeApiError } from "@/app/lib/hackatime";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -5,15 +6,22 @@ export async function GET(request: NextRequest) {
 
     if (!access_token) return Response.json({ response: "Unauthorized" }, { status: 401 });
 
-    const userReq = await fetch("https://hackatime.hackclub.com/api/v1/authenticated/me", {
-        headers: {
-            "Authorization": `Bearer ${access_token}`
+    const hackatime = new Hackatime({ access_token });
+
+    try {
+        const userData = await hackatime.getUser();
+
+        if (!userData) return Response.json({ response: "Unauthorized" }, { status: 401 });
+
+        return Response.json({ response: "Authorized", data: userData }, { status: 200 });
+    } catch (error) {
+        if (error instanceof HackatimeApiError) {
+            if (error.status === 401) {
+                return Response.json({ response: "Unauthorized" }, { status: 401 });
+            }
+            return Response.json({ response: `Hackatime API error: ${error.status}` }, { status: 502 });
         }
-    });
 
-    if (!userReq.ok) return Response.json({ response: "Unauthorized" }, { status: 401 });
-
-    const user = await userReq.json();
-
-    return Response.json({ response: "Authorized", data: user }, { status: 200 });
+        return Response.json({ response: "Failed to fetch Hackatime user" }, { status: 502 });
+    }
 }
