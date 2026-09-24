@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
     let githubData;
 
     try {
+        if (!userWithoutTrustFactor.github_username) githubData = [null, null];
         githubData = await Promise.all([
             getGithubUser(userWithoutTrustFactor.github_username),
             getGithubRepos(userWithoutTrustFactor.github_username),
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
                 },
                 {
                     role: "user",
-                    content: `#Hackatime Data\nUser information: ${JSON.stringify(userWithoutTrustFactor)}. Coding time information: ${codingTime.total_seconds} seconds. Actual streak: ${JSON.stringify(streak)}. Latest heartbeat information: ${JSON.stringify(latestHeartbeat)}. Projects: ${JSON.stringify(projects)}.\n\n#Github Data\nUser information: ${JSON.stringify(githubUser)}. Repositories: ${JSON.stringify(githubRepos)}.`
+                    content: `#Hackatime Data\nUser information: ${JSON.stringify(userWithoutTrustFactor)}. Coding time information: ${codingTime.total_seconds} seconds. Actual streak: ${JSON.stringify(streak)}. Latest heartbeat information: ${JSON.stringify(latestHeartbeat)}. Projects: ${JSON.stringify(projects)}.\n\n#GitHub Data\n${githubUser ? `User information: ${JSON.stringify(githubUser)}. Repositories: ${JSON.stringify(githubRepos)}.` : "No GitHub data available."}`
                 }
             ],
             stream: false,
